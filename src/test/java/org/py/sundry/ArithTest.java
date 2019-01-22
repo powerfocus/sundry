@@ -2,7 +2,6 @@ package org.py.sundry;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.StringWriter;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
@@ -13,7 +12,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.commons.io.FileUtils;
@@ -77,7 +75,7 @@ public class ArithTest {
 		map.put("oslist", Arrays.asList("win7", "win8", "win10", "ubuntu"));
 		String json = mapper.writeValueAsString(map);
 		System.out.println(json);
-		Map readMap = mapper.readValue(json, Map.class);
+		Map<?, ?> readMap = mapper.readValue(json, Map.class);
 		System.out.println(readMap);
 	}
 }
