@@ -75,10 +75,9 @@ public class ArithTest {
 		map.put("copyring", "pythagoras");
 		map.put("qq", "20926399");
 		map.put("oslist", Arrays.asList("win7", "win8", "win10", "ubuntu"));
-		StringWriter sw = new StringWriter();
-		mapper.writeValue(sw, map);
-		System.out.println(sw.toString());
-		Map readMap = mapper.readValue(sw.toString(), Map.class);
+		String json = mapper.writeValueAsString(map);
+		System.out.println(json);
+		Map readMap = mapper.readValue(json, Map.class);
 		System.out.println(readMap);
 	}
 }
