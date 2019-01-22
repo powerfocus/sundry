@@ -1,0 +1,7 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost/sssh?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Chongqing&useSSL=true
+    username: py
+    password: 123  thymeleaf:    cache: false  jpa:    show-sql: true
+    hibernate:      ddl-auto: none    open-in-view: false
