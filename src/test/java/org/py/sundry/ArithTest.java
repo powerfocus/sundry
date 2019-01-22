@@ -4,6 +4,11 @@ import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.Test;
@@ -30,5 +35,16 @@ public class ArithTest {
 		System.out.println(FileUtils.ONE_GB);
 		System.out.println(FileUtils.ONE_KB);
 		System.out.println(FileUtils.ONE_MB);
+	}
+	@Test
+	public void test4() {
+		Optional<BigDecimal> re = Stream.iterate(BigDecimal.ONE, n -> n.add(BigDecimal.ONE))
+			.limit(100)
+			.reduce((a, b) -> a.multiply(b));
+		String restr = re.get().toString();
+		Matcher matcher = Pattern.compile("0+\\b").matcher(restr);
+		System.out.println(restr);
+		if(matcher.find())
+			System.out.println(matcher.group().length());
 	}
 }
