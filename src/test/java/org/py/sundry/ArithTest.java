@@ -2,8 +2,14 @@ package org.py.sundry;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -12,6 +18,10 @@ import java.util.stream.Stream;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.Test;
+
+import com.fasterxml.jackson.core.JsonGenerationException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class ArithTest {
 	@Test
@@ -46,5 +56,29 @@ public class ArithTest {
 		System.out.println(restr);
 		if(matcher.find())
 			System.out.println(matcher.group().length());
+	}
+	@Test
+	public void test5() throws JsonGenerationException, JsonMappingException, IOException {
+		ObjectMapper mapper = new ObjectMapper();
+		List<String> list = new ArrayList<>(Arrays.asList(
+					"win95", "win98", "win2000", "winxp", "win2003", "winvista", "win2008", "win7", "win8", "win10"
+				));
+		mapper.writeValue(System.out, list); 
+	}
+	@Test
+	public void test6() throws JsonGenerationException, JsonMappingException, IOException {
+		ObjectMapper mapper = new ObjectMapper();
+		Map<String, Object> map = new LinkedHashMap<>();
+		map.put("os", "win10");
+		map.put("name", "powerfocus");
+		map.put("version", "1.0");
+		map.put("copyring", "pythagoras");
+		map.put("qq", "20926399");
+		map.put("oslist", Arrays.asList("win7", "win8", "win10", "ubuntu"));
+		StringWriter sw = new StringWriter();
+		mapper.writeValue(sw, map);
+		System.out.println(sw.toString());
+		Map readMap = mapper.readValue(sw.toString(), Map.class);
+		System.out.println(readMap);
 	}
 }
