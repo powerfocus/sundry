@@ -15,6 +15,8 @@ import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.fluent.Request;
 import org.junit.Test;
 
 import com.fasterxml.jackson.core.JsonGenerationException;
@@ -76,6 +78,15 @@ public class ArithTest {
 		String json = mapper.writeValueAsString(map);
 		System.out.println(json);
 		Map<?, ?> readMap = mapper.readValue(json, Map.class);
+		System.out.println(readMap.get("os").getClass());
 		System.out.println(readMap);
+	}
+	@Test
+	public void test7() throws ClientProtocolException, IOException {
+		String html = Request.Get("http://www.163.com")
+			.execute()
+			.returnContent()
+			.asString();
+		System.out.println(html);
 	}
 }
