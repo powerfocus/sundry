@@ -17,6 +17,9 @@ import java.util.stream.Stream;
 import org.apache.commons.io.FileUtils;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.fluent.Request;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
 import org.junit.Test;
 
 import com.fasterxml.jackson.core.JsonGenerationException;
@@ -88,5 +91,11 @@ public class ArithTest {
 			.returnContent()
 			.asString();
 		System.out.println(html);
+	}
+	@Test
+	public void test8() throws IOException {
+		Document doc = Jsoup.connect("http://www.163.com").get();
+		doc.select(".news_default_yw .cm_ul_round li a")
+			.forEach(a -> System.out.println(a.text()));
 	}
 }
