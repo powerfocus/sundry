@@ -4,29 +4,34 @@ import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.fluent.Request;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
 import org.junit.Test;
+import org.slf4j.Logger;
 
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class ArithTest {
+	private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(ArithTest.class);
 	@Test
 	public void test() throws IOException {
 		File filesdir = FileUtils.getFile("files");
@@ -95,7 +100,70 @@ public class ArithTest {
 	@Test
 	public void test8() throws IOException {
 		Document doc = Jsoup.connect("http://www.163.com").get();
-		doc.select(".news_default_yw .cm_ul_round li a")
+		doc.select(".cm_ul_round li a")
 			.forEach(a -> System.out.println(a.text()));
+	}
+	@Test
+	public void test9() throws IOException {
+		Document doc = Jsoup.connect("http://www.163.com").get();
+		String baseUri = doc.baseUri();
+		doc.getElementsByAttribute("src")
+			.forEach(src -> {
+				String srcattr = src.attr("src");
+				srcattr = (srcattr.startsWith("//") ? baseUri.concat(srcattr) : srcattr);
+				try {
+					String filename = FilenameUtils.getName(srcattr);
+					String extensionName = FilenameUtils.getExtension(filename);
+					if(!extensionName.isEmpty() && extensionName.length() == 3 && !extensionName.contains("?") && !extensionName.contains("&")) {
+						String fn = UUID.randomUUID().toString().replace("-", "").substring(0, 10);
+						FileUtils.copyURLToFile(new URL(srcattr), FileUtils.getFile("C:\\Users\\Administrator\\Desktop\\files", fn.concat(".").concat(extensionName)));
+						LOGGER.info("save file: " + filename);
+					}
+				} catch (IOException e) {
+					System.out.println(e.getMessage());
+				}
+			});
+	}
+	@Test
+	public void test10() throws IOException {
+		String data = "这是一个测试程序，io测试，中文文本文档输出";
+		FileUtils.writeStringToFile(FileUtils.getFile("files", "readme.txt"), data, StandardCharsets.UTF_8);
+		LOGGER.info("文件操作完成！");
+	}
+	@Test
+	public void test11() throws IOException {
+		String content = FileUtils.readFileToString(FileUtils.getFile("files", "readme.txt"), StandardCharsets.UTF_8);
+		LOGGER.info("文档内容：");
+		LOGGER.info(content);
+	}
+	@Test
+	public void test12() throws IOException {
+		List<String> colls = new ArrayList<>();
+		colls.add("hello world.");
+		colls.add("2019.01.24");
+		FileUtils.writeLines(FileUtils.getFile("files", "readme.txt"), colls);
+		LOGGER.info("文件写入完成！");
+	}
+	@Test
+	public void test13() throws IOException {
+		String content = FileUtils.readFileToString(FileUtils.getFile("files", "readme.txt"), StandardCharsets.UTF_8);
+		LOGGER.info("文件内容：");
+		LOGGER.info(content);
+	}
+	@Test
+	public void test14() throws IOException {
+		List<String> lines = new ArrayList<>();
+		lines.add("添加一些内容");
+		lines.add("这是一个文本文件追加操作");
+		lines.add("2019.01.24");
+		FileUtils.writeLines(FileUtils.getFile("files", "readme.txt"), lines, true);
+		LOGGER.info("文件写入操作完成！");
+	}
+	@Test
+	public void test15() {
+		Stream.generate(Math::random)
+			.limit(10)
+			.map(n -> Double.valueOf(Math.floor(n * 10)).longValue())
+			.forEach(System.out::println);
 	}
 }
