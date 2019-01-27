@@ -3,6 +3,7 @@ package org.py.sundry;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -12,9 +13,12 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.OptionalInt;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import org.apache.commons.io.FileUtils;
@@ -163,7 +167,66 @@ public class ArithTest {
 	public void test15() {
 		Stream.generate(Math::random)
 			.limit(10)
-			.map(n -> Double.valueOf(Math.floor(n * 10)).longValue())
+			.map(n -> Double.valueOf(Math.floor(n * 1000)).longValue())
 			.forEach(System.out::println);
+	}
+	@Test
+	public void test16() {
+		OptionalInt re = IntStream.iterate(Integer.valueOf(1), n -> n + 1)
+			.limit(100)
+			.reduce((a, b) -> a + b);
+		System.out.println(re.getAsInt());
+	}
+	@Test
+	public void test17() {
+		Optional<BigDecimal> re = Stream.iterate(BigDecimal.ONE, n -> n.add(BigDecimal.ONE))
+			.limit(100)
+			.reduce((a, b) -> a.multiply(b));
+		System.out.println(re.get().toBigInteger());
+		System.out.println(re.get());
+	}
+	@Test
+	public void test18() {
+		Optional<BigInteger> re = Stream.iterate(BigInteger.ONE, n -> n.add(BigInteger.ONE))
+			.limit(100)
+			.reduce((a, b) -> a.multiply(b));
+		System.out.println(re.get());
+	}
+	@Test
+	public void test19() {
+		IntStream.rangeClosed(1,  100)
+			.boxed()
+			.flatMap(a -> IntStream.rangeClosed(a, 100)
+					.filter(b -> Math.sqrt(a * a + b * b) % 1 == 0)
+					.mapToObj(b -> new int[] {a, b, (int)Math.sqrt(a * a + b * b)})
+				);
+	}
+	@Test
+	public void test20() {
+		List<String> words = Arrays.asList("hello ", "world.");
+		words.stream()
+			.map(word -> word.split(""))
+			.flatMap(Arrays::stream)
+			.collect(Collectors.toList())
+			.forEach(System.out::println);
+	}
+	@Test
+	public void test21() {
+		List<Integer> coll1 = Arrays.asList(1, 2).stream().collect(Collectors.toList());
+		List<Integer> coll2 = Arrays.asList(3, 4, 5, 6, 7).stream().collect(Collectors.toList());
+		coll1.stream()
+			.flatMap(i -> coll2.stream().map(j -> new int[] {i, j}))
+			.collect(Collectors.toList())
+			.stream()
+			.map(it -> Arrays.stream(it));
+	}
+	@Test
+	public void test22() {
+		List<Integer> coll1 = Arrays.asList(1, 2).stream().collect(Collectors.toList());
+		List<Integer> coll2 = Arrays.asList(3, 4, 5, 6, 7, 8, 9).stream().collect(Collectors.toList());
+		coll1.stream()
+			.flatMap(i -> coll2.stream().map(j -> new int[] {i, j}))
+			.collect(Collectors.toList())
+			.forEach(it -> System.out.println(Arrays.toString(it)));
 	}
 }
