@@ -222,11 +222,9 @@ public class ArithTest {
 	}
 	@Test
 	public void test22() {
-		List<Integer> coll1 = Arrays.asList(1, 2).stream().collect(Collectors.toList());
-		List<Integer> coll2 = Arrays.asList(3, 4, 5, 6, 7, 8, 9).stream().collect(Collectors.toList());
-		coll1.stream()
-			.flatMap(i -> coll2.stream().map(j -> new int[] {i, j}))
-			.collect(Collectors.toList())
-			.forEach(it -> System.out.println(Arrays.toString(it)));
+		Stream.iterate(new int[] {0, 1}, t -> new int[] {t[1], t[0] + t[1]})
+			.limit(10)
+			.map(t -> t[0])
+			.forEach(System.out::println);
 	}
 }
