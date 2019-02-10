@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>文件上传</title>
+</head>
+<body>
+	<div class="container">
+		<div class="row">
+			<div class="col-md-10">
+				<form th:action="@{/upload}" method="post" th:object="${uploadModel}">
+					<div>
+						<div><label>标题</label></div>
+						<div>
+							<input type="text" id="title" name="title" th:field="*{title}" />
+							<p style="color: red;" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></p>
+						</div>
+					</div>
+					<div>
+						<div><label>短标题</label></div>
+						<div>
+							<input type="text" id="smalltitle" name="smalltitle" th:field="*{smalltitle}" />
+							<p style="color: red;" th:if="${#fields.hasErrors('smalltitle')}" th:errors="*{smalltitle}"></p>
+						</div>
+					</div>
+					<div>
+						<div><label>来源</label></div>
+						<div>
+							<p style="color: red;" th:if="${#fields.hasErrors('source')}" th:errors="*{source}"></p>
+							<select name="source" id="source" th:field="*{source}">
+								<option value="网络">网络</option>
+								<option value="原创">原创</option>
+							</select>
+						</div>
+					</div>
+					<div>
+						<div><label>内容</label></div>
+						<div>
+							<p style="color: red;" th:if="${#fields.hasErrors('content')}" th:errors="*{content}"></p>
+							<textarea rows="10" cols="20" id="content" name="content" th:field="*{content}"></textarea>
+						</div>
+					</div>
+					<div>
+						<input type="submit" value="提交内容" />
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

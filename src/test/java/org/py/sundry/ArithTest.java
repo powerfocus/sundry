@@ -227,4 +227,11 @@ public class ArithTest {
 			.map(t -> t[0])
 			.forEach(System.out::println);
 	}
+	@Test
+	public void test23() {
+		ArrayList<BigInteger> collect = Stream.iterate(BigInteger.ONE, v -> v.add(BigInteger.valueOf(1)))
+			.limit(100)
+			.collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
+		collect.forEach(t -> System.out.print(t + ", "));
+	}
 }
